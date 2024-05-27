@@ -1,8 +1,8 @@
 import { DepartmentApplication } from "@/department/domain/applications/department.application";
 import { randomUUID } from "crypto";
-import { Employees } from "./../entities/employees";
+import { Employee } from "../entities/employee";
 
-export class EmployeesApplication extends Employees {
+export class EmployeeApplication extends Employee {
   public id: string;
 
   constructor(

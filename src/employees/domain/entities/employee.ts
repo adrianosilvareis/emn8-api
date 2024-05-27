@@ -1,6 +1,6 @@
 import { Department } from "@/department/domain/entities/department";
 
-export class Employees {
+export class Employee {
   constructor(
     public firstName: string,
     public lastName: string,
