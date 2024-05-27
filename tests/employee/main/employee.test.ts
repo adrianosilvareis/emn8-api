@@ -1,10 +1,12 @@
 import { DeleteEmployeeController } from "@/employees/infrastructure/controllers/delete-employee.controller";
 import { GetAllEmployeesController } from "@/employees/infrastructure/controllers/get-all-employees.controller";
 import { GetEmployeeByIdController } from "@/employees/infrastructure/controllers/get-employee-by-id.controller";
+import { UpdateEmployeeController } from "@/employees/infrastructure/controllers/update-employee.controller";
 import { MockedEmployeeDatabase } from "@/employees/infrastructure/gateways/database/mocked-employee.database";
 import { DeleteEmployeeRepository } from "@/employees/infrastructure/repositories/delete-employee.repository";
 import { GetAllEmployeesRepository } from "@/employees/infrastructure/repositories/get-all-employees.repository";
 import { GetEmployeeByIdRepository } from "@/employees/infrastructure/repositories/get-employee-by-id.repository";
+import { UpdateEmployeeRepository } from "@/employees/infrastructure/repositories/update-employee.repository";
 import { app } from "@/express.config";
 import { routerAdapter } from "@/protocols/router-adapter";
 import request from "supertest";
@@ -23,6 +25,11 @@ const getEmployeeByIdController = new GetEmployeeByIdController(
 const deleteEmployeeRepository = new DeleteEmployeeRepository(database);
 const deleteEmployeeController = new DeleteEmployeeController(
   deleteEmployeeRepository
+);
+
+const updateEmployeeRepository = new UpdateEmployeeRepository(database);
+const updateEmployeeController = new UpdateEmployeeController(
+  updateEmployeeRepository
 );
 
 describe("Employee integration tests", () => {
@@ -160,6 +167,33 @@ describe("Employee integration tests", () => {
           validation: "uuid"
         }
       ]);
+    });
+  });
+
+  describe("PUT /employee/:id", () => {
+    it("should return 200 when employee is updated", async () => {
+      app.put("/update/success/:id", routerAdapter(updateEmployeeController));
+      const response = await request(app)
+        .put("/update/success/64c801b4-35bb-4739-b942-5db7c0cce5ab")
+        .send({
+          firstName: "New Name"
+        });
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(
+        expect.objectContaining({
+          firstName: "New Name"
+        })
+      );
+    });
+
+    it("should return 400 when request is invalid", async () => {
+      app.put("/update/success/:id", routerAdapter(updateEmployeeController));
+      const response = await request(app)
+        .put("/update/success/64c801b4-35bb-4739-b942-5db7c0cce5ab")
+        .send({
+          departmentId: "whrong value"
+        });
+      expect(response.status).toBe(400);
     });
   });
 });

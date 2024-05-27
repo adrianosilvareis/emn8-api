@@ -39,7 +39,7 @@ describe("UpdateEmployeeController", () => {
     const repository = new UpdateEmployeeRepository(database);
     const sut = new UpdateEmployeeController(repository);
     const body = {
-      id: "123456",
+      id: "64c801b4-35bb-4739-b942-5db7c0cce123",
       firstName: "not found"
     };
 
