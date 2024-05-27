@@ -20,7 +20,7 @@ describe("UpdateEmployeeController", () => {
   });
 
   it("should return 500 with error message on throw", async () => {
-    jest.spyOn(database, "updateEmployee").mockImplementation(() => {
+    jest.spyOn(database, "updateEmployee").mockImplementationOnce(() => {
       throw new Error("Any error message");
     });
     const repository = new UpdateEmployeeRepository(database);

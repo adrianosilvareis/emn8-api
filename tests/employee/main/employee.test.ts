@@ -118,7 +118,9 @@ describe("Employee integration tests", () => {
         "/delete/failure/:id",
         routerAdapter(deleteEmployeeController)
       );
-      const response = await request(app).delete("/delete/failure/123");
+      const response = await request(app).delete(
+        "/delete/failure/64c801b4-35bb-4739-b942-5db7c0cce5ab"
+      );
       expect(response.status).toBe(500);
     });
 
@@ -127,8 +129,27 @@ describe("Employee integration tests", () => {
         "/delete/failure/:id",
         routerAdapter(deleteEmployeeController)
       );
-      const response = await request(app).delete("/delete/failure/123");
+      const response = await request(app).delete(
+        "/delete/failure/64c801b4-35bb-4739-b942-5db7c0cce123"
+      );
       expect(response.status).toBe(404);
+    });
+
+    it("should return bad request error when id is malformatted not found", async () => {
+      app.delete(
+        "/delete/failure/:id",
+        routerAdapter(deleteEmployeeController)
+      );
+      const response = await request(app).delete("/delete/failure/123456");
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual([
+        {
+          code: "invalid_string",
+          message: "Invalid uuid",
+          path: ["id"],
+          validation: "uuid"
+        }
+      ]);
     });
   });
 });

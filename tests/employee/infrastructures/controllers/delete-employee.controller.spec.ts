@@ -32,9 +32,26 @@ describe("DeleteEmployeeController", () => {
     const repository = new DeleteEmployeeRepository(database);
     const sut = new DeleteEmployeeController(repository);
     const response = await sut.execute({
-      id: "123"
+      id: "64c801b4-35bb-4739-b942-5db7c0cce123"
     });
     expect(response.code).toBe(404);
     expect(response.message).toBe("Not Found");
+  });
+
+  it("should return 400 when id is malformatted", async () => {
+    const repository = new DeleteEmployeeRepository(database);
+    const sut = new DeleteEmployeeController(repository);
+    const response = await sut.execute({
+      id: "1234"
+    });
+    expect(response.code).toBe(400);
+    expect(response.message).toEqual([
+      {
+        code: "invalid_string",
+        message: "Invalid uuid",
+        path: ["id"],
+        validation: "uuid"
+      }
+    ]);
   });
 });
