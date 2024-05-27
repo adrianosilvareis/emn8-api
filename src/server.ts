@@ -1,7 +1,9 @@
 import { departmentRouters } from "./department/main";
-import { app, router } from "./express.config";
+import { employeeRouters } from "./employees/main";
+import { app } from "./express.config";
 
-app.use("/department", departmentRouters(router));
+departmentRouters(app);
+employeeRouters(app);
 
 const $PORT = process.env.PORT || 5000;
 
