@@ -1,6 +1,6 @@
 import { Controller } from "@/protocols/controller";
 import { HttpResponses } from "@/protocols/http-responses";
-import { getEmployeeByIdValidator } from "../presentation/request/get-employe-by-id.validation";
+import { getEmployeeByIdValidator } from "../presentation/request/get-employee-by-id.validation";
 import { GetEmployeeByIdRepository } from "../repositories/get-employee-by-id.repository";
 
 type ByIdParameters = { id: string };

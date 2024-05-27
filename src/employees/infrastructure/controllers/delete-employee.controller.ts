@@ -1,6 +1,6 @@
 import { Controller } from "@/protocols/controller";
 import { HttpResponses } from "@/protocols/http-responses";
-import { deleteEmployeeValidator } from "../presentation/request/delete-employe.validation";
+import { deleteEmployeeValidator } from "../presentation/request/delete-employee.validation";
 import { DeleteEmployeeRepository } from "../repositories/delete-employee.repository";
 
 type ByIdParameter = {
