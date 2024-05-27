@@ -1,21 +1,64 @@
 import { GetAllEmployeesController } from "@/employees/infrastructure/controllers/get-all-employees.controller";
+import { GetEmployeeByIdController } from "@/employees/infrastructure/controllers/get-employee-by-id.controller";
 import { MockedEmployeeDatabase } from "@/employees/infrastructure/gateways/database/mocked-employee.database";
 import { GetAllEmployeesRepository } from "@/employees/infrastructure/repositories/get-all-employees.repository";
+import { GetEmployeeByIdRepository } from "@/employees/infrastructure/repositories/get-employee-by-id.repository";
 import { app } from "@/express.config";
 import { routerAdapter } from "@/protocols/router-adapter";
 import request from "supertest";
 
 const database = new MockedEmployeeDatabase();
-const repository = new GetAllEmployeesRepository(database);
-const controller = new GetAllEmployeesController(repository);
+const getAllEmployeeRepository = new GetAllEmployeesRepository(database);
+const getAllEmployeeController = new GetAllEmployeesController(
+  getAllEmployeeRepository
+);
+
+const getEmployeeByIdRepository = new GetEmployeeByIdRepository(database);
+const getEmployeeByIdController = new GetEmployeeByIdController(
+  getEmployeeByIdRepository
+);
 
 describe("Employee integration tests", () => {
-  it("should return all employee", async () => {
-    app.get("/success", routerAdapter(controller));
-    const response = await request(app).get("/success");
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual([
-      {
+  describe("GET /employee/get-all", () => {
+    it("should return all employee", async () => {
+      app.get("/list/success", routerAdapter(getAllEmployeeController));
+      const response = await request(app).get("/list/success");
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual([
+        {
+          firstName: "John",
+          hireDate: "2021-01-01T00:00:00.000Z",
+          id: "64c801b4-35bb-4739-b942-5db7c0cce5ab",
+          lastName: "Doe",
+          phone: "555-555-5555",
+          address: "1234 Elm St",
+          department: {
+            id: "1ff629a9-d532-4914-9606-96efac1e8ce7",
+            name: "IT"
+          }
+        }
+      ]);
+    });
+
+    it("should return internal error when employee throw", async () => {
+      jest.spyOn(database, "getAllEmployees").mockImplementationOnce(() => {
+        throw new Error();
+      });
+
+      app.get("/list/failure", routerAdapter(getAllEmployeeController));
+      const response = await request(app).get("/list/failure");
+      expect(response.status).toBe(500);
+    });
+  });
+
+  describe("GET /employee/:id", () => {
+    it("should return employee by id", async () => {
+      app.get("/findOne/success/:id", routerAdapter(getEmployeeByIdController));
+      const response = await request(app).get(
+        "/findOne/success/64c801b4-35bb-4739-b942-5db7c0cce5ab"
+      );
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({
         firstName: "John",
         hireDate: "2021-01-01T00:00:00.000Z",
         id: "64c801b4-35bb-4739-b942-5db7c0cce5ab",
@@ -26,17 +69,23 @@ describe("Employee integration tests", () => {
           id: "1ff629a9-d532-4914-9606-96efac1e8ce7",
           name: "IT"
         }
-      }
-    ]);
-  });
-
-  it("should return internal error when employee throw", async () => {
-    jest.spyOn(database, "getAllEmployees").mockImplementation(() => {
-      throw new Error();
+      });
     });
 
-    app.get("/failure", routerAdapter(controller));
-    const response = await request(app).get("/failure");
-    expect(response.status).toBe(500);
+    it("should return internal error when employee database throw", async () => {
+      jest.spyOn(database, "getEmployeeById").mockImplementationOnce(() => {
+        throw new Error();
+      });
+
+      app.get("/findOne/failure", routerAdapter(getEmployeeByIdController));
+      const response = await request(app).get("/findOne/failure");
+      expect(response.status).toBe(500);
+    });
+
+    it("should return not found error when employee not found", async () => {
+      app.get("/failure/:id", routerAdapter(getEmployeeByIdController));
+      const response = await request(app).get("/findOne/failure/123");
+      expect(response.status).toBe(404);
+    });
   });
 });
