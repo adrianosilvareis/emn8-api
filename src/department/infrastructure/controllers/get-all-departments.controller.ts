@@ -1,7 +1,8 @@
+import { Controller } from "@/protocols/controller";
 import { HttpResponses } from "@/protocols/http-responses";
 import { GetAllDepartmentRepository } from "../repositories/get-all-departments.repository";
 
-export class GetAllDepartmentController {
+export class GetAllDepartmentController implements Controller {
   constructor(
     private readonly departmentRepository: GetAllDepartmentRepository
   ) {}
