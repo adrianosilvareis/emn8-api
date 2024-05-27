@@ -1,8 +1,8 @@
 import { Department } from "@/department/domain/entities/department";
 import { DepartmentDatabase } from "@/department/domain/protocols/department.database";
-import { GetAllDepartments } from "@/department/domain/use-cases/get-all-departments";
+import { GetAllDepartmentsUseCase } from "@/department/domain/use-cases/get-all-departments.use-case";
 
-export class GetAllDepartmentRepository implements GetAllDepartments {
+export class GetAllDepartmentRepository implements GetAllDepartmentsUseCase {
   constructor(private readonly database: DepartmentDatabase) {}
 
   async getAll(): Promise<Department[]> {
