@@ -2,7 +2,7 @@ import { Controller } from "@/protocols/controller";
 import { HttpResponses } from "@/protocols/http-responses";
 import { GetAllDepartmentRepository } from "../repositories/get-all-departments.repository";
 
-export class GetAllDepartmentController implements Controller {
+export class GetAllDepartmentController implements Controller<unknown> {
   constructor(
     private readonly departmentRepository: GetAllDepartmentRepository
   ) {}
