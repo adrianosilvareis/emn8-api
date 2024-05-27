@@ -84,15 +84,25 @@ describe("Employee integration tests", () => {
         throw new Error();
       });
 
-      app.get("/findOne/failure", routerAdapter(getEmployeeByIdController));
-      const response = await request(app).get("/findOne/failure");
+      app.get("/findOne/failure/:id", routerAdapter(getEmployeeByIdController));
+      const response = await request(app).get(
+        "/findOne/failure/64c801b4-35bb-4739-b942-5db7c0cce5ab"
+      );
       expect(response.status).toBe(500);
     });
 
     it("should return not found error when employee not found", async () => {
       app.get("/failure/:id", routerAdapter(getEmployeeByIdController));
-      const response = await request(app).get("/findOne/failure/123");
+      const response = await request(app).get(
+        "/findOne/failure/64c801b4-35bb-4739-b942-5db7c0cce123"
+      );
       expect(response.status).toBe(404);
+    });
+
+    it("should return bad request error when employeeId is malformatted", async () => {
+      app.get("/failure/:id", routerAdapter(getEmployeeByIdController));
+      const response = await request(app).get("/findOne/failure/123456");
+      expect(response.status).toBe(400);
     });
   });
 

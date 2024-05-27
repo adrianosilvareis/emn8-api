@@ -1,5 +1,6 @@
 import { Controller } from "@/protocols/controller";
 import { HttpResponses } from "@/protocols/http-responses";
+import { getEmployeeByIdValidator } from "../presentation/request/get-employe-by-id.validation";
 import { GetEmployeeByIdRepository } from "../repositories/get-employee-by-id.repository";
 
 type ByIdParameters = { id: string };
@@ -7,9 +8,15 @@ type ByIdParameters = { id: string };
 export class GetEmployeeByIdController implements Controller<ByIdParameters> {
   constructor(private repository: GetEmployeeByIdRepository) {}
 
-  async execute({ id }: ByIdParameters): Promise<HttpResponses> {
+  async execute(request: ByIdParameters): Promise<HttpResponses> {
     try {
-      const employee = await this.repository.getById(id);
+      const validatedRequest = getEmployeeByIdValidator(request);
+
+      if (!validatedRequest.success) {
+        return HttpResponses.BadRequest(validatedRequest.error.errors);
+      }
+
+      const employee = await this.repository.getById(request.id);
       if (employee === null) {
         return HttpResponses.NotFound();
       }
