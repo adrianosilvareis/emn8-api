@@ -1,6 +1,6 @@
 import { GetAllDepartmentController } from "@/department/infrastructure/controllers/get-all-departments.controller";
 import { MockedDepartmentDatabase } from "@/department/infrastructure/gateways/database/mocked-department.database";
-import { GetAllDepartmentRepository } from "@/department/infrastructure/repositories/get-all-departments.repository";
+import { GetAllDepartmentRepository } from "@/department/infrastructure/repositories/get-all-department.repository";
 import { app } from "@/express.config";
 import { routerAdapter } from "@/protocols/router-adapter";
 import request from "supertest";

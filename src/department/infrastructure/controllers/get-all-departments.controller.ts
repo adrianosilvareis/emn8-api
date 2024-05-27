@@ -1,6 +1,6 @@
 import { Controller } from "@/protocols/controller";
 import { HttpResponses } from "@/protocols/http-responses";
-import { GetAllDepartmentRepository } from "../repositories/get-all-departments.repository";
+import { GetAllDepartmentRepository } from "../repositories/get-all-department.repository";
 
 export class GetAllDepartmentController implements Controller {
   constructor(

@@ -1,5 +1,5 @@
 import { MockedDepartmentDatabase } from "@/department/infrastructure/gateways/database/mocked-department.database";
-import { GetAllDepartmentRepository } from "@/department/infrastructure/repositories/get-all-departments.repository";
+import { GetAllDepartmentRepository } from "@/department/infrastructure/repositories/get-all-department.repository";
 
 const database = new MockedDepartmentDatabase();
 
