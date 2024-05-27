@@ -1,6 +1,8 @@
+import { DeleteEmployeeController } from "@/employees/infrastructure/controllers/delete-employee.controller";
 import { GetAllEmployeesController } from "@/employees/infrastructure/controllers/get-all-employees.controller";
 import { GetEmployeeByIdController } from "@/employees/infrastructure/controllers/get-employee-by-id.controller";
 import { MockedEmployeeDatabase } from "@/employees/infrastructure/gateways/database/mocked-employee.database";
+import { DeleteEmployeeRepository } from "@/employees/infrastructure/repositories/delete-employee.repository";
 import { GetAllEmployeesRepository } from "@/employees/infrastructure/repositories/get-all-employees.repository";
 import { GetEmployeeByIdRepository } from "@/employees/infrastructure/repositories/get-employee-by-id.repository";
 import { app } from "@/express.config";
@@ -16,6 +18,11 @@ const getAllEmployeeController = new GetAllEmployeesController(
 const getEmployeeByIdRepository = new GetEmployeeByIdRepository(database);
 const getEmployeeByIdController = new GetEmployeeByIdController(
   getEmployeeByIdRepository
+);
+
+const deleteEmployeeRepository = new DeleteEmployeeRepository(database);
+const deleteEmployeeController = new DeleteEmployeeController(
+  deleteEmployeeRepository
 );
 
 describe("Employee integration tests", () => {
@@ -85,6 +92,42 @@ describe("Employee integration tests", () => {
     it("should return not found error when employee not found", async () => {
       app.get("/failure/:id", routerAdapter(getEmployeeByIdController));
       const response = await request(app).get("/findOne/failure/123");
+      expect(response.status).toBe(404);
+    });
+  });
+
+  describe("DELETE /employee/:id", () => {
+    it("should return 200 when employee is deleted", async () => {
+      app.delete(
+        "/delete/success/:id",
+        routerAdapter(deleteEmployeeController)
+      );
+      const response = await request(app).delete(
+        "/delete/success/64c801b4-35bb-4739-b942-5db7c0cce5ab"
+      );
+      expect(response.status).toBe(200);
+      expect(response.body).toBeTruthy();
+    });
+
+    it("should return internal error when employee database throw", async () => {
+      jest.spyOn(database, "deleteEmployee").mockImplementationOnce(() => {
+        throw new Error();
+      });
+
+      app.delete(
+        "/delete/failure/:id",
+        routerAdapter(deleteEmployeeController)
+      );
+      const response = await request(app).delete("/delete/failure/123");
+      expect(response.status).toBe(500);
+    });
+
+    it("should return not found error when employee not found", async () => {
+      app.delete(
+        "/delete/failure/:id",
+        routerAdapter(deleteEmployeeController)
+      );
+      const response = await request(app).delete("/delete/failure/123");
       expect(response.status).toBe(404);
     });
   });
