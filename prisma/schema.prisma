@@ -8,18 +8,31 @@ datasource db {
 }
 
 model Department {
-  id        String     @id @default(uuid())
-  name      String
-  employees Employee[]
+  id              String            @id @default(uuid())
+  name            String
+  employees       Employee[]
+  EmployeeHistory EmployeeHistory[]
 }
 
 model Employee {
+  id              String            @id @default(uuid())
+  firstName       String
+  lastName        String
+  hireDate        DateTime
+  phone           String?
+  address         String?
+  department      Department        @relation(fields: [departmentId], references: [id])
+  departmentId    String
+  active          Boolean           @default(true)
+  employeeHistory EmployeeHistory[]
+}
+
+model EmployeeHistory {
   id           String     @id @default(uuid())
-  firstName    String
-  lastName     String
-  hireDate     DateTime
-  phone        String?
-  address      String?
+  employee     Employee   @relation(fields: [employeeId], references: [id])
+  employeeId   String
+  startDate    DateTime
+  endDate      DateTime?
   department   Department @relation(fields: [departmentId], references: [id])
   departmentId String
 }
