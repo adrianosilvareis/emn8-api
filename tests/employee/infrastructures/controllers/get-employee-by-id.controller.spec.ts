@@ -22,7 +22,9 @@ describe("GetEmployeeByIdController", () => {
       hireDate: new Date("2021-01-01T00:00:00.000Z"),
       id: "64c801b4-35bb-4739-b942-5db7c0cce5ab",
       lastName: "Doe",
-      phone: "555-555-5555"
+      phone: "555-555-5555",
+      employeeHistory: [],
+      active: true
     });
   });
 

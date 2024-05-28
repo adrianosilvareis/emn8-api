@@ -46,6 +46,8 @@ describe("Employee integration tests", () => {
           lastName: "Doe",
           phone: "555-555-5555",
           address: "1234 Elm St",
+          employeeHistory: [],
+          active: true,
           department: {
             id: "1ff629a9-d532-4914-9606-96efac1e8ce7",
             name: "IT"
@@ -79,6 +81,8 @@ describe("Employee integration tests", () => {
         lastName: "Doe",
         phone: "555-555-5555",
         address: "1234 Elm St",
+        employeeHistory: [],
+        active: true,
         department: {
           id: "1ff629a9-d532-4914-9606-96efac1e8ce7",
           name: "IT"
@@ -109,6 +113,33 @@ describe("Employee integration tests", () => {
     it("should return bad request error when employeeId is malformatted", async () => {
       app.get("/failure/:id", routerAdapter(getEmployeeByIdController));
       const response = await request(app).get("/findOne/failure/123456");
+      expect(response.status).toBe(400);
+    });
+  });
+
+  describe("PUT /employee/:id", () => {
+    it("should return 200 when employee is updated", async () => {
+      app.put("/update/success/:id", routerAdapter(updateEmployeeController));
+      const response = await request(app)
+        .put("/update/success/64c801b4-35bb-4739-b942-5db7c0cce5ab")
+        .send({
+          firstName: "New Name"
+        });
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(
+        expect.objectContaining({
+          firstName: "New Name"
+        })
+      );
+    });
+
+    it("should return 400 when request is invalid", async () => {
+      app.put("/update/success/:id", routerAdapter(updateEmployeeController));
+      const response = await request(app)
+        .put("/update/success/64c801b4-35bb-4739-b942-5db7c0cce5ab")
+        .send({
+          departmentId: "whrong value"
+        });
       expect(response.status).toBe(400);
     });
   });
@@ -167,33 +198,6 @@ describe("Employee integration tests", () => {
           validation: "uuid"
         }
       ]);
-    });
-  });
-
-  describe("PUT /employee/:id", () => {
-    it("should return 200 when employee is updated", async () => {
-      app.put("/update/success/:id", routerAdapter(updateEmployeeController));
-      const response = await request(app)
-        .put("/update/success/64c801b4-35bb-4739-b942-5db7c0cce5ab")
-        .send({
-          firstName: "New Name"
-        });
-      expect(response.status).toBe(200);
-      expect(response.body).toEqual(
-        expect.objectContaining({
-          firstName: "New Name"
-        })
-      );
-    });
-
-    it("should return 400 when request is invalid", async () => {
-      app.put("/update/success/:id", routerAdapter(updateEmployeeController));
-      const response = await request(app)
-        .put("/update/success/64c801b4-35bb-4739-b942-5db7c0cce5ab")
-        .send({
-          departmentId: "whrong value"
-        });
-      expect(response.status).toBe(400);
     });
   });
 });
