@@ -14,7 +14,9 @@ export class MockedEmployeeDatabase implements EmployeeDatabase {
         "1ff629a9-d532-4914-9606-96efac1e8ce7"
       ),
       address: "1234 Elm St",
-      phone: "555-555-5555"
+      phone: "555-555-5555",
+      active: true,
+      employeeHistory: []
     }
   ];
 
@@ -26,6 +28,8 @@ export class MockedEmployeeDatabase implements EmployeeDatabase {
       employee.lastName,
       employee.hireDate,
       employee.department,
+      employee.active,
+      employee.employeeHistory,
       employee.phone,
       employee.address
     );
