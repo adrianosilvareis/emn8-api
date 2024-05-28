@@ -1,7 +1,9 @@
+import { CreateEmployeeController } from "../infrastructure/controllers/create-employee.controller";
 import { DeleteEmployeeController } from "../infrastructure/controllers/delete-employee.controller";
 import { GetEmployeeByIdController } from "../infrastructure/controllers/get-employee-by-id.controller";
 import { UpdateEmployeeController } from "../infrastructure/controllers/update-employee.controller";
 import { PostgresEmployeeDatabase } from "../infrastructure/gateways/database/postgres-employee.database";
+import { CreateEmployeeRepository } from "../infrastructure/repositories/create-employee.repository";
 import { DeleteEmployeeRepository } from "../infrastructure/repositories/delete-employee.repository";
 import { GetAllEmployeesRepository } from "../infrastructure/repositories/get-all-employees.repository";
 import { GetEmployeeByIdRepository } from "../infrastructure/repositories/get-employee-by-id.repository";
@@ -28,4 +30,9 @@ export const deleteEmployeeController = new DeleteEmployeeController(
 const updateEmployee = new UpdateEmployeeRepository(database);
 export const updateEmployeeController = new UpdateEmployeeController(
   updateEmployee
+);
+
+const createEmployee = new CreateEmployeeRepository(database);
+export const createEmployeeController = new CreateEmployeeController(
+  createEmployee
 );

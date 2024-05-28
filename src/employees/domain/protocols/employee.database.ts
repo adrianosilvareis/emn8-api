@@ -3,8 +3,8 @@ import { Employee } from "../entities/employee";
 
 export abstract class EmployeeDatabase {
   abstract createEmployee(
-    employee: Omit<EmployeeApplication, "id">
-  ): Promise<Employee>;
+    employee: Partial<Employee>
+  ): Promise<EmployeeApplication>;
   abstract getEmployeeById(id: string): Promise<EmployeeApplication | null>;
   abstract getAllEmployees(): Promise<EmployeeApplication[]>;
   abstract updateEmployee(

@@ -1,4 +1,5 @@
 import { DepartmentApplication } from "@/department/domain/applications/department.application";
+import { AddEmployeeProps } from "@/employees/domain/applications/add-employee.props";
 import { EmployeeApplication } from "@/employees/domain/applications/employee.applications";
 import { EmployeeHistory } from "@/employees/domain/entities/employee-history";
 import { EmployeeDatabase } from "@/employees/domain/protocols/employee.database";
@@ -38,15 +39,15 @@ export class PostgresEmployeeDatabase implements EmployeeDatabase {
   connect = new PrismaClient();
 
   async createEmployee(
-    employee: Omit<EmployeeApplication, "id">
+    employee: AddEmployeeProps
   ): Promise<EmployeeApplication> {
     const employeeApp = new EmployeeApplication(
       employee.firstName,
       employee.lastName,
-      employee.hireDate,
-      employee.department,
-      employee.active,
-      employee.employeeHistory,
+      new Date(employee.hireDate),
+      new DepartmentApplication("", employee.departmentId),
+      true,
+      [],
       employee.phone,
       employee.address
     );
